@@ -3,12 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <title>Weather API Demo</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        select { padding: 5px; font-size: 16px; }
+        button { padding: 5px 10px; font-size: 16px; cursor: pointer; }
+        pre { background: #f4f4f4; padding: 10px; border-radius: 5px; }
+    </style>
 </head>
 <body>
     <h1>Weather App (Open Meteo)</h1>
 
-    <label>Şehir adı:</label>
-    <input id="city" placeholder="İstanbul">
+    <label for="city">Şehir Seçiniz:</label>
+    
+    <select id="city">
+        <option value="Istanbul">İstanbul</option>
+        <option value="Ankara">Ankara</option>
+        <option value="Izmir">İzmir</option>
+        <option value="Bursa">Londra</option>
+        <option value="Peru">Berlin</option>
+        <option value="Tokat">Tokyo</option>
+        <option value="New York">New York</option>
+        <option value="Paris">Paris</option>
+    </select>
+
     <button onclick="getWeather()">Getir</button>
 
     <pre id="result"></pre>
