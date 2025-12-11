@@ -1,142 +1,93 @@
-cat > index.html <<EOF
 <!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hava Durumu Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Modern Hava Durumu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* Genel Sayfa Düzeni */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Mor-Mavi Geçiş */
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             color: #333;
         }
-
-        /* Ortadaki Beyaz Kart */
         .card {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            width: 100%;
-            max-width: 450px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 25px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            width: 350px;
             text-align: center;
-            transition: transform 0.3s ease;
+            backdrop-filter: blur(10px);
         }
-
-        .card:hover {
-            transform: translateY(-5px); /* Üzerine gelince hafif yukarı kalkar */
-        }
-
-        h1 {
-            color: #4a4a4a;
-            font-size: 24px;
-            margin-bottom: 25px;
-            font-weight: 600;
-        }
-
-        /* Form Elemanları Grubu */
-        .form-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* Seçim Kutusu (Select) */
+        h2 { margin-top: 0; color: #444; font-size: 22px; }
+        
         select {
-            flex: 1;
             padding: 12px;
-            border: 2px solid #e0e0e0;
+            width: 100%;
             border-radius: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
             font-size: 16px;
             outline: none;
-            background-color: white;
+            background: white;
             cursor: pointer;
-            transition: border-color 0.3s;
         }
 
-        select:focus {
-            border-color: #667eea;
-        }
-
-        /* Buton Tasarımı */
-        button {
-            padding: 12px 25px;
-            background-color: #667eea;
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-        }
-
-        button:hover {
-            background-color: #764ba2;
-            transform: scale(1.05);
-        }
-
-        button:active {
-            transform: scale(0.95);
-        }
-
-        /* Sonuç Alanı (JSON Çıktısı için) */
-        #result {
-            background-color: #2d3436;
-            color: #00cec9;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: left;
-            font-family: 'Consolas', 'Monaco', monospace;
-            font-size: 13px;
-            overflow-x: auto;
-            max-height: 300px;
-            white-space: pre-wrap;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
-        }
+        /* Hava Durumu Gösterge Alanı */
+        .weather-icon { font-size: 80px; margin: 10px 0; display: block; }
+        .temp { font-size: 50px; font-weight: 600; color: #2d3436; }
+        .desc { font-size: 18px; color: #636e72; margin-top: 5px; font-weight: 500; }
+        .details { margin-top: 20px; font-size: 14px; color: #888; display: flex; justify-content: space-around; }
         
-        .footer {
-            margin-top: 15px;
-            font-size: 12px;
-            color: #888;
+        .loading { color: #888; font-style: italic; display: none; }
+        
+        button {
+            background: #0072ff; color: white; border: none;
+            padding: 12px 30px; border-radius: 30px;
+            font-size: 16px; cursor: pointer; margin-top: 20px;
+            box-shadow: 0 5px 15px rgba(0,114,255,0.4);
+            transition: transform 0.2s;
         }
+        button:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
 
     <div class="card">
-        <h1>🌤️ Hava Durumu Paneli</h1>
+        <h2>🌤️ Hava Durumu</h2>
         
-        <div class="form-group">
-            <select id="city">
-                <option value="" disabled selected>Şehir Seçiniz...</option>
-                <option value="Istanbul">İstanbul</option>
-                <option value="Ankara">Ankara</option>
-                <option value="Izmir">İzmir</option>
-                <option value="Antalya">Antalya</option>
-                <option value="London">Londra</option>
-                <option value="Berlin">Berlin</option>
-                <option value="New York">New York</option>
-                <option value="Tokyo">Tokyo</option>
-            </select>
-            <button onclick="getWeather()">Sorgula</button>
-        </div>
+        <select id="citySelect">
+            <option value="" disabled selected>Bir Şehir Seçin...</option>
+            <option value="Istanbul">İstanbul</option>
+            <option value="Ankara">Ankara</option>
+            <option value="Izmir">İzmir</option>
+            <option value="Antalya">Antalya</option>
+            <option value="London">Londra</option>
+            <option value="Berlin">Berlin</option>
+            <option value="Tokyo">Tokyo</option>
+        </select>
 
-        <pre id="result">Sonuçlar burada görünecek...</pre>
+        <div id="weatherDisplay" style="display: none;">
+            <div class="weather-icon" id="icon">☀️</div>
+            <div class="temp" id="temp">0°C</div>
+            <div class="desc" id="description">Açık</div>
+            <div class="details">
+                <span id="wind">💨 0 km/s</span>
+            </div>
+        </div>
         
-        <div class="footer">Powered by Open Meteo API & Docker</div>
+        <p class="loading" id="loadingText">Veriler çekiliyor...</p>
+
+        <button onclick="getWeather()">Durumu Getir</button>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
-EOF
