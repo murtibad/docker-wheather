@@ -3,75 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Hava Durumu</title>
+    <title>Türkiye Hava Durumu</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Montserrat', sans-serif;
-            background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             color: #333;
         }
         .card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 40px;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            width: 350px;
-            text-align: center;
-            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            width: 380px; text-align: center;
         }
-        h2 { margin-top: 0; color: #444; font-size: 22px; }
+        h2 { margin-top: 0; color: #1e3c72; }
         
         select {
-            padding: 12px;
-            width: 100%;
-            border-radius: 10px;
-            border: 1px solid #ddd;
-            margin-bottom: 20px;
-            font-size: 16px;
-            outline: none;
-            background: white;
-            cursor: pointer;
+            padding: 15px; width: 100%;
+            border-radius: 10px; border: 2px solid #e0e0e0;
+            margin-bottom: 20px; font-size: 16px;
+            background: #f9f9f9; cursor: pointer;
         }
+        
+        .weather-icon { font-size: 90px; margin: 15px 0; }
+        .temp { font-size: 56px; font-weight: 700; color: #333; }
+        .desc { font-size: 20px; color: #666; font-weight: 500; text-transform: capitalize; }
+        .details { margin-top: 20px; color: #888; font-size: 14px; }
 
-        /* Hava Durumu Gösterge Alanı */
-        .weather-icon { font-size: 80px; margin: 10px 0; display: block; }
-        .temp { font-size: 50px; font-weight: 600; color: #2d3436; }
-        .desc { font-size: 18px; color: #636e72; margin-top: 5px; font-weight: 500; }
-        .details { margin-top: 20px; font-size: 14px; color: #888; display: flex; justify-content: space-around; }
-        
-        .loading { color: #888; font-style: italic; display: none; }
-        
         button {
-            background: #0072ff; color: white; border: none;
-            padding: 12px 30px; border-radius: 30px;
-            font-size: 16px; cursor: pointer; margin-top: 20px;
-            box-shadow: 0 5px 15px rgba(0,114,255,0.4);
-            transition: transform 0.2s;
+            background: #ff7675; color: white; border: none;
+            padding: 15px 40px; border-radius: 30px;
+            font-size: 16px; font-weight: bold; cursor: pointer;
+            transition: all 0.3s; width: 100%; margin-top: 15px;
         }
-        button:hover { transform: scale(1.05); }
+        button:hover { background: #d63031; transform: translateY(-3px); }
+        .loading { display: none; color: #666; font-style: italic; margin-top: 10px; }
     </style>
 </head>
 <body>
-
     <div class="card">
-        <h2>🌤️ Hava Durumu</h2>
+        <h2>🇹🇷 İl İl Hava Durumu</h2>
         
         <select id="citySelect">
-            <option value="" disabled selected>Bir Şehir Seçin...</option>
-            <option value="Istanbul">İstanbul</option>
-            <option value="Ankara">Ankara</option>
-            <option value="Izmir">İzmir</option>
-            <option value="Antalya">Antalya</option>
-            <option value="London">Londra</option>
-            <option value="Berlin">Berlin</option>
-            <option value="Tokyo">Tokyo</option>
+            <option value="" disabled selected>Yükleniyor...</option>
         </select>
 
         <div id="weatherDisplay" style="display: none;">
@@ -83,11 +62,9 @@
             </div>
         </div>
         
-        <p class="loading" id="loadingText">Veriler çekiliyor...</p>
-
-        <button onclick="getWeather()">Durumu Getir</button>
+        <p class="loading" id="loadingText">Veriler alınıyor...</p>
+        <button onclick="getWeather()">Sorgula</button>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
