@@ -1,4 +1,3 @@
-// 81 İlin Koordinat Listesi (Alfabetik)
 const turkeyCities = [
     { name: "Adana", lat: 37.0000, lon: 35.3213 },
     { name: "Adıyaman", lat: 37.7648, lon: 38.2786 },
@@ -83,7 +82,6 @@ const turkeyCities = [
     { name: "Düzce", lat: 40.8438, lon: 31.1565 }
 ];
 
-// WMO Hava Durumu Kodları (Türkçe)
 const weatherCodes = {
     0:  { label: 'Güneşli / Açık', icon: '☀️' },
     1:  { label: 'Az Bulutlu', icon: '🌤️' },
@@ -102,38 +100,41 @@ const weatherCodes = {
     95: { label: 'Fırtına', icon: '⚡' }
 };
 
-// Sayfa yüklendiğinde listeyi doldur
-window.onload = function() {
+// Sayfa tamamen yüklendiğinde çalışacak
+document.addEventListener('DOMContentLoaded', function() {
     const select = document.getElementById('citySelect');
+    // Eğer select elementi bulunamazsa dur (Hata önleyici)
+    if (!select) return;
+
+    // Listeyi temizle ve varsayılan seçeneği ekle
     select.innerHTML = '<option value="" disabled selected>Şehir Seçiniz...</option>';
     
-    // Listeyi alfabetik sıraya göre ekle (Gerçi listede zaten sıralı ama garanti olsun)
-    turkeyCities.sort((a, b) => a.name.localeCompare(b.name, 'tr')).forEach(city => {
+    // Şehirleri alfabetik sırala ve listeye ekle
+    turkeyCities.sort((a, b) => a.name.localeCompare(b.name, 'tr'));
+    
+    turkeyCities.forEach(city => {
         const option = document.createElement('option');
-        option.value = city.name; // Value olarak ismi tutuyoruz
-        option.innerText = city.name;
+        option.value = city.name;
+        option.textContent = city.name;
         select.appendChild(option);
     });
-};
+});
 
 async function getWeather() {
     const citySelect = document.getElementById('citySelect');
     const cityName = citySelect.value;
     
-    // UI Elementleri
     const display = document.getElementById('weatherDisplay');
     const loading = document.getElementById('loadingText');
 
-    if (!cityName) {
+    if (!cityName || cityName === "") {
         alert("Lütfen listeden bir il seçiniz!");
         return;
     }
 
-    // Listeden koordinatları bul
     const cityData = turkeyCities.find(c => c.name === cityName);
-    if (!cityData) return; // Hata kontrolü
+    if (!cityData) return;
 
-    // Yükleniyor animasyonu
     display.style.display = 'none';
     loading.style.display = 'block';
 
@@ -143,4 +144,19 @@ async function getWeather() {
         const response = await fetch(url);
         const data = await response.json();
         const current = data.current_weather;
-        const codeInfo = weatherCodes[current.weathercode] || { label: 'Bilin
+        const codeInfo = weatherCodes[current.weathercode] || { label: 'Bilinmiyor', icon: '❓' };
+
+        document.getElementById('temp').innerText = `${current.temperature}°C`;
+        document.getElementById('wind').innerText = `💨 Rüzgar: ${current.windspeed} km/s`;
+        document.getElementById('description').innerText = codeInfo.label;
+        document.getElementById('icon').innerText = codeInfo.icon;
+
+        loading.style.display = 'none';
+        display.style.display = 'block';
+
+    } catch (error) {
+        console.error("Hata:", error);
+        loading.style.display = 'none';
+        alert("Bağlantı hatası! İnternetinizi kontrol edin.");
+    }
+}
